@@ -1,0 +1,233 @@
+
+
+
+performing operation b1;
+
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+
+
+
+performing operation r1 (Y);
+Putting the data item Y under ReadLock by Transaction 1
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1]
+
+
+
+performing operation r1 (Z);
+Putting the data item Z under ReadLock by Transaction 1
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1]
+DataItem :Z	lockMode:readlock	TID List:[1]
+
+
+
+performing operation b2;
+
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1]
+DataItem :Z	lockMode:readlock	TID List:[1]
+
+
+
+performing operation r2 (Y);
+Putting the data item Y under ReadLock by Transaction 2
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2]
+DataItem :Z	lockMode:readlock	TID List:[1]
+
+
+
+performing operation b3;
+
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Active	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2]
+DataItem :Z	lockMode:readlock	TID List:[1]
+
+
+
+performing operation r3 (Y);
+Putting the data item Y under ReadLock by Transaction 3
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2, 3]
+DataItem :Z	lockMode:readlock	TID List:[1]
+
+
+
+performing operation w1 (Z);
+Upgrading Readlock to WriteLock on data item Z for transaction 1. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2, 3]
+DataItem :Z	lockMode:writeLock	TID List:[1]
+
+
+
+performing operation w3 (Y);
+data item Y is under ReadLock by 1 transaction. 
+call Wound Wait. 
+changing transaction state for transaction 3 to blocked. data item Y is under ReadLock by 2 transaction. 
+call Wound Wait. 
+changing transaction state for transaction 3 to blocked. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Waiting	Locked Resources:['Y']	Blocked By:[1, 2]	Blocked operations:['w3 (Y);\n']
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2, 3]
+DataItem :Z	lockMode:writeLock	TID List:[1]
+
+
+
+performing operation w2 (Y);
+data item Y is under ReadLock by 1 transaction. 
+call Wound Wait. 
+changing transaction state for transaction 2 to blocked. data item Y is under ReadLock by 3 transaction. 
+call Wound Wait. 
+time stamp of requestion-transaction 2 is less than resource holding-transaction 3
+Aborting Transaction 3. 
+Unlocking all resources held by transaction 3. 
+checking if there are any transactions waiting on this transaction. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Waiting	Locked Resources:['Y']	Blocked By:[1]	Blocked operations:['w2 (Y);\n']
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2]
+DataItem :Z	lockMode:writeLock	TID List:[1]
+
+
+
+performing operation r2 (X);
+transaction state of tranaction 2 waiting.
+so r2 (X);
+is added to blocked operation.
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Active	Locked Resources:['Y', 'Z']	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Waiting	Locked Resources:['Y']	Blocked By:[1]	Blocked operations:['w2 (Y);\n', 'r2 (X);\n']
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:readlock	TID List:[1, 2]
+DataItem :Z	lockMode:writeLock	TID List:[1]
+
+
+
+performing operation e1;
+
+Committing transaction 1 . 
+Unlocking all resources held by transaction 1. 
+checking if there are any transactions waiting on this transaction. 
+transacation is matched 2 which is blocked by transaction 1
+attempting operation w2 (Y);
+
+
+
+performing operation w2 (Y);
+Upgrading Readlock to WriteLock on data item Y for transaction 2. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y']	Blocked By:[1]	Blocked operations:['r2 (X);\n']
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:writeLock	TID List:[2]
+
+attempting operation r2 (X);
+
+
+
+performing operation r2 (X);
+Putting the data item X under ReadLock by Transaction 2
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y', 'X']	Blocked By:[1]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:writeLock	TID List:[2]
+DataItem :X	lockMode:readlock	TID List:[2]
+
+blocked operations are cleared. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y', 'X']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:writeLock	TID List:[2]
+DataItem :X	lockMode:readlock	TID List:[2]
+
+
+
+performing operation e3;
+
+Transaction 3 is already aborted or commited. So no changes in the tables.
+
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y', 'X']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:writeLock	TID List:[2]
+DataItem :X	lockMode:readlock	TID List:[2]
+
+
+
+performing operation w2 (X);
+Upgrading Readlock to WriteLock on data item X for transaction 2. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Active	Locked Resources:['Y', 'X']	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
+DataItem :Y	lockMode:writeLock	TID List:[2]
+DataItem :X	lockMode:writeLock	TID List:[2]
+
+
+
+performing operation e2;
+Committing transaction 2 . 
+Unlocking all resources held by transaction 2. 
+checking if there are any transactions waiting on this transaction. 
+Transaction table :
+transactionID :1	timestamp:1	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :2	timestamp:2	transactionState:Committed	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+transactionID :3	timestamp:3	transactionState:Abort 	Locked Resources:[]	Blocked By:[]	Blocked operations:[]
+
+Lock table :
